@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { supabase } from "../lib/supabaseClient"
+import { DBEvent } from "./types";
 
 export default function HomePage() {
   const [events, setEvents] = useState<DBEvent[]>([])
