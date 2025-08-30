@@ -2,14 +2,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 
-interface Event {
+interface MyEvent {
   id: string;
   title: string;
   date: string;
 }
 
 export default function RSVPPage() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<MyEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [status, setStatus] = useState<string>("Yes");
   const [userId, setUserId] = useState<string>("");
