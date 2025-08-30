@@ -5,7 +5,7 @@ import Link from "next/link"
 import { supabase } from "../lib/supabaseClient"
 
 export default function HomePage() {
-  const [events, setEvents] = useState<any[]>([])
+  const [events, setEvents] = useState<Event[]>([])
 
   useEffect(() => {
     fetchEvents()
