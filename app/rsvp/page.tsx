@@ -11,7 +11,7 @@ interface MyEvent {
 export default function RSVPPage() {
   const [events, setEvents] = useState<MyEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
-  const [status, setStatus] = useState<string>("Yes");
+  const [status, setStatus] = useState<"Yes" | "No" | "Maybe">("Yes");
   const [userId, setUserId] = useState<string>("");
 
   // fetch events on load
@@ -21,37 +21,38 @@ export default function RSVPPage() {
 
   async function fetchEvents() {
     const { data, error } = await supabase
-      .from<MyEvent>("events")
+      .from("events")
       .select("id, title, date")
       .order("date", { ascending: true });
 
     if (error) {
-      console.error("Error fetching events:", error);
-    } else {
-      setEvents(data || []);
+      console.error("❌ Error fetching events:", error);
+    } else if (data) {
+      setEvents(data as MyEvent[]);
     }
   }
 
   async function submitRSVP() {
-    if (!selectedEvent || !userId) {
-      alert("Please enter User ID and select an event.");
+    if (!selectedEvent || !userId.trim()) {
+      alert("⚠️ Please enter User ID and select an event.");
       return;
     }
 
     const { error } = await supabase.from("rsvps").insert([
       {
-        user_id: userId,
+        user_id: userId.trim(),
         event_id: selectedEvent,
-        status: status,
+        status,
       },
     ]);
 
     if (error) {
-      alert("Error: " + error.message);
+      alert("❌ Error: " + error.message);
     } else {
       alert("✅ RSVP submitted successfully!");
       setSelectedEvent("");
       setStatus("Yes");
+      setUserId(""); // clear after submit
     }
   }
 
@@ -93,7 +94,7 @@ export default function RSVPPage() {
         <label className="block text-sm font-medium mb-1">RSVP Status</label>
         <select
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as "Yes" | "No" | "Maybe")}
           className="w-full border rounded-lg p-2"
         >
           <option value="Yes">✅ Yes</option>
