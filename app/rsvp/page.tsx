@@ -21,7 +21,7 @@ export default function RSVPPage() {
 
   async function fetchEvents() {
     const { data, error } = await supabase
-      .from("events")
+      .from<MyEvent>("events")
       .select("id, title, date")
       .order("date", { ascending: true });
 
