@@ -2,17 +2,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../utils/supabaseClient";
-
-// 👇 Rename to avoid clash with DOM Event
-interface DBEvent {
-  id: string;
-  title: string;
-  date: string;
-}
+import { DBEvent } from "./types";  // 👈 import custom type
 
 export default function EventsPage() {
-  // 👇 Explicitly tell TypeScript this is DBEvent[]
-  const [events, setEvents] = useState<DBEvent[]>([]);
+  const [events, setEvents] = useState<DBEvent[]>([]); // 👈 explicitly use DBEvent[]
 
   useEffect(() => {
     fetchEvents();
@@ -27,7 +20,7 @@ export default function EventsPage() {
     if (error) {
       console.error("Error fetching events:", error);
     } else {
-      setEvents(data as DBEvent[]);
+      setEvents(data as DBEvent[]); // 👈 cast to DBEvent[]
     }
   }
 
