@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../utils/supabaseClient";
-import { DBEvent } from "./types";  // 👈 import custom type
+import { DBEvent } from "../types";  // 👈 import custom type
 
 export default function EventsPage() {
   const [events, setEvents] = useState<DBEvent[]>([]); // 👈 explicitly use DBEvent[]
