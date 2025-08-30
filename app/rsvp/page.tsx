@@ -1,20 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "../utils/supabaseClient";
 
+// 👇 define your own Event type with a different name
 interface MyEvent {
   id: string;
   title: string;
   date: string;
 }
 
-export default function RSVPPage() {
+export default function EventsPage() {
   const [events, setEvents] = useState<MyEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
-  const [status, setStatus] = useState<"Yes" | "No" | "Maybe">("Yes");
-  const [userId, setUserId] = useState<string>("");
 
-  // fetch events on load
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -26,90 +24,41 @@ export default function RSVPPage() {
       .order("date", { ascending: true });
 
     if (error) {
-      console.error("❌ Error fetching events:", error);
-    } else if (data) {
+      console.error("Error fetching events:", error);
+    } else {
       setEvents(data as MyEvent[]);
     }
   }
 
-  async function submitRSVP() {
-    if (!selectedEvent || !userId.trim()) {
-      alert("⚠️ Please enter User ID and select an event.");
-      return;
-    }
-
-    const { error } = await supabase.from("rsvps").insert([
-      {
-        user_id: userId.trim(),
-        event_id: selectedEvent,
-        status,
-      },
-    ]);
-
+  async function deleteEvent(id: string) {
+    const { error } = await supabase.from("events").delete().eq("id", id);
     if (error) {
-      alert("❌ Error: " + error.message);
+      console.error("Error deleting event:", error);
     } else {
-      alert("✅ RSVP submitted successfully!");
-      setSelectedEvent("");
-      setStatus("Yes");
-      setUserId(""); // clear after submit
+      setEvents(events.filter((ev) => ev.id !== id));
     }
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-2xl">
-      <h1 className="text-2xl font-bold mb-6 text-center">RSVP to an Event</h1>
-
-      {/* User ID */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">User ID</label>
-        <input
-          type="text"
-          placeholder="Enter your user_id"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          className="w-full border rounded-lg p-2"
-        />
-      </div>
-
-      {/* Event Dropdown */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Select Event</label>
-        <select
-          value={selectedEvent}
-          onChange={(e) => setSelectedEvent(e.target.value)}
-          className="w-full border rounded-lg p-2"
-        >
-          <option value="">-- Choose an Event --</option>
-          {events.map((ev) => (
-            <option key={ev.id} value={ev.id}>
-              {ev.title} – {new Date(ev.date).toDateString()}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* RSVP Status */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">RSVP Status</label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as "Yes" | "No" | "Maybe")}
-          className="w-full border rounded-lg p-2"
-        >
-          <option value="Yes">✅ Yes</option>
-          <option value="No">❌ No</option>
-          <option value="Maybe">🤔 Maybe</option>
-        </select>
-      </div>
-
-      {/* Submit Button */}
-      <button
-        onClick={submitRSVP}
-        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-      >
-        Submit RSVP
-      </button>
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-2xl">
+      <h1 className="text-2xl font-bold mb-4">📅 Events</h1>
+      <ul>
+        {events.map((ev) => (
+          <li key={ev.id} className="mb-3">
+            <strong>{ev.title}</strong> – {new Date(ev.date).toDateString()}
+            <Link href={`/edit/${ev.id}`} className="ml-3 text-blue-600">
+              ✏️ Edit
+            </Link>
+            <button
+              onClick={() => deleteEvent(ev.id)}
+              className="ml-3 text-red-600"
+            >
+              🗑️ Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
+
