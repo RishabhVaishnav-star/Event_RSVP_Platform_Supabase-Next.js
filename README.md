@@ -86,3 +86,6 @@ Data is normalized to avoid redundancy: users are stored once, events reference 
 
 **GitHub repo link** 
 https://github.com/RishabhVaishnav-star/pixabeam-events.git
+
+**Vercel app link**
+https://pixabeam-events-lemon.vercel.app/
