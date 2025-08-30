@@ -85,3 +85,4 @@ Normalization:
 Data is normalized to avoid redundancy: users are stored once, events reference their creator, and RSVPs form a many-to-many relationship between users and events.
 
 **GitHub repo link** 
+https://github.com/RishabhVaishnav-star/pixabeam-events.git
