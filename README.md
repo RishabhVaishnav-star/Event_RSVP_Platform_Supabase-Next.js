@@ -1,6 +1,6 @@
 # Event RSVP Platform (Supabase + Next.js)
 
-This is a simple **event management and RSVP platform** built using **Next.js (App Router) and Supabase** as part of the PixaBeam Database Management assessment.
+This is a simple **event management and RSVP platform** built using **Next.js (App Router) and Supabase**.
 
 It demonstrates database design, referential integrity, and a minimal frontend that interacts with the backend.
 
